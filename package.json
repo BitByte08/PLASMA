@@ -1,7 +1,7 @@
 {
   "name": "plasma-engine",
-  "version": "0.2.0",
-  "description": "AI Persona Engine — LLM-backed human simulation with memory, emotion, fatigue, social influence, and relationship graphs",
+  "version": "0.1.0",
+  "description": "Persona Lifecycle & Adaptive Social Mind Architecture",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -13,6 +13,7 @@
   "files": [
     "dist",
     "src",
+    "docs",
     "README.md"
   ],
   "scripts": {
