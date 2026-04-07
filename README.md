@@ -1,5 +1,7 @@
 # Plasma Engine
 
+**P**ersona **L**earning & **A**daptive **S**ocial **M**ind **A**rchitecture
+
 LLM-backed AI persona engine for games and simulations.
 
 Each `PlasmaEngine` instance is one simulated person — they have a **personality**, **mood**, **fatigue**, **memory**, a **social influence score**, and a **relationship graph** centered on themselves. They read messages, decide whether to respond, call game-world tools, and produce in-character text replies.
