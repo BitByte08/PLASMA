@@ -1,6 +1,8 @@
 # Plasma Engine
 
-**P**ersona **L**earning & **A**daptive **S**ocial **M**ind **A**rchitecture
+**[English](./README.md)** · **[한국어](./docs/README.ko.md)**
+
+**P**ersona **L**ifecycle & **A**daptive **S**ocial **M**ind **A**rchitecture
 
 LLM-backed AI persona engine for games and simulations.
 
