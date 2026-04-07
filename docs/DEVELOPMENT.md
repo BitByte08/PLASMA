@@ -9,6 +9,8 @@
 - [새 모듈 추가하기](#새-모듈-추가하기)
 - [새 LLM 프로바이더 추가하기](#새-llm-프로바이더-추가하기)
 - [설계 원칙](#설계-원칙)
+- [커밋 컨벤션](#커밋-컨벤션)
+- [버전 관리](#버전-관리)
 - [릴리즈 프로세스](#릴리즈-프로세스)
 
 ---
@@ -264,13 +266,114 @@ switch (config.llm.provider) {
 
 ---
 
+## 커밋 컨벤션
+
+[Conventional Commits](https://www.conventionalcommits.org/) 규칙을 따릅니다.
+
+```
+<type>(<scope>): <subject>
+```
+
+### 타입
+
+| 타입 | 언제 쓰나 |
+|------|----------|
+| `feat` | 새 기능 추가 |
+| `fix` | 버그 수정 |
+| `docs` | 문서만 변경 |
+| `refactor` | 기능 변화 없는 코드 정리 |
+| `test` | 테스트 추가/수정 |
+| `chore` | 빌드, 패키지, 설정 변경 |
+| `perf` | 성능 개선 |
+
+### 스코프 (선택)
+
+변경된 모듈을 명시합니다.
+
+`emotion` · `fatigue` · `memory` · `graph` · `router` · `llm` · `mcp` · `rank` · `types`
+
+### 예시
+
+```
+feat(emotion): add burnout recovery curve
+fix(router): fix MUST_RESPOND threshold for DMs
+docs: add Korean section to README
+refactor(llm): extract prompt assembly into PromptBuilder
+test(graph): add rivalry classification edge case
+chore: bump typescript to 5.8
+```
+
+### Breaking Change
+
+공개 API가 바뀌는 경우 본문에 `BREAKING CHANGE:` 를 명시합니다:
+
+```
+feat(types)!: rename PersonaConfig.influenceScore to socialScore
+
+BREAKING CHANGE: PersonaConfig.influenceScore has been renamed to
+socialScore for clarity. Update all usages accordingly.
+```
+
+`!` 표시 또는 `BREAKING CHANGE:` 가 있으면 major 버전을 올려야 합니다.
+
+---
+
+## 버전 관리
+
+[Semantic Versioning](https://semver.org/) 을 따릅니다: `MAJOR.MINOR.PATCH`
+
+| 버전 종류 | 언제 올리나 | 예시 |
+|----------|-----------|------|
+| `MAJOR` | 공개 API 파괴적 변경 | `1.0.0` → `2.0.0` |
+| `MINOR` | 하위 호환되는 기능 추가 | `1.0.0` → `1.1.0` |
+| `PATCH` | 하위 호환되는 버그 수정 | `1.0.0` → `1.0.1` |
+
+### 프리릴리즈 단계
+
+```
+alpha → beta → rc → 정식 출시
+```
+
+| 태그 | 의미 | 버전 예시 | npm 배포 명령 |
+|------|------|----------|--------------|
+| `alpha` | 초기 개발, 기능 불완전 | `1.0.0-alpha.1` | `npm publish --tag alpha` |
+| `beta` | 기능 완성, 버그 수정 중 | `1.0.0-beta.1` | `npm publish --tag beta` |
+| `rc` | 최종 후보, 이상 없으면 정식 출시 | `1.0.0-rc.1` | `npm publish --tag rc` |
+| *(없음)* | 정식 출시 (`latest`) | `1.0.0` | `npm publish` |
+
+> 프리릴리즈 태그가 붙은 버전은 `npm install plasma-engine` 으로는 설치되지 않습니다.
+> 사용자가 `npm install plasma-engine@rc` 처럼 명시해야 설치됩니다.
+
+### 버전 올리는 법
+
+```bash
+# 정식 버전
+npm version patch    # 1.0.0 → 1.0.1
+npm version minor    # 1.0.0 → 1.1.0
+npm version major    # 1.0.0 → 2.0.0
+
+# 프리릴리즈
+npm version prerelease --preid=alpha   # 1.0.0 → 1.0.1-alpha.0
+npm version prerelease --preid=beta    # 1.0.1-alpha.0 → 1.0.1-beta.0
+npm version prerelease --preid=rc      # 1.0.1-beta.0 → 1.0.1-rc.0
+
+# 또는 직접 지정
+npm version 1.1.0-rc.1
+```
+
+`npm version` 은 `package.json` 수정 + git commit + git tag 를 한 번에 처리합니다.
+
+---
+
 ## 릴리즈 프로세스
+
+### 정식 릴리즈
 
 ```bash
 # 1. 테스트 전체 통과 확인
 npm test
 
-# 2. 버전 올리기
+# 2. 버전 올리기 (package.json + git commit + git tag 자동 생성)
 npm version patch   # 버그 수정: 0.2.0 → 0.2.1
 npm version minor   # 기능 추가: 0.2.0 → 0.3.0
 npm version major   # 파괴적 변경: 0.2.0 → 1.0.0
@@ -282,4 +385,19 @@ git push origin main --tags
 npm publish --otp=<2FA코드>
 ```
 
-버전 올리면 `package.json`과 `git tag`가 자동으로 생성됩니다.
+### 프리릴리즈
+
+```bash
+# 1. 버전 지정
+npm version 1.0.0-rc.1
+
+# 2. GitHub에 푸시
+git push origin main --tags
+
+# 3. npm 배포 (--tag 필수)
+npm publish --tag rc --otp=<2FA코드>
+
+# rc → 정식 출시할 때
+npm version 1.0.0
+npm publish --otp=<2FA코드>
+```
