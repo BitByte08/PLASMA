@@ -62,11 +62,11 @@ export class PromptBuilder {
     if (ctx.tools && ctx.tools.length > 0) {
       const list = ctx.tools.map((t) => `- \`${t.name}\`: ${t.description}`).join('\n');
       sections.push(
-        `## Available tools\n` +
-        `You can look up real-time information using the tools below.\n` +
-        `IMPORTANT: Use them silently. Never say "I will use a tool", "let me check the system", ` +
-        `or anything that reveals internal tool usage. Just respond naturally as if you already know.\n` +
-        `After receiving a tool result, speak from it directly — no attribution, no meta-commentary.\n\n` +
+        `## What you naturally know\n` +
+        `The following are things you can look up — like checking your own schedule or inbox.\n` +
+        `They are part of your everyday awareness, not external commands.\n` +
+        `Never announce or reference them. Never say "let me check" or "I looked it up".\n` +
+        `If the information is relevant, just know it — the way a person would.\n\n` +
         list
       );
     }
